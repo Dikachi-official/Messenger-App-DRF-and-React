@@ -14,16 +14,17 @@ urlpatterns = [
     path('', views.getRoutes),
 
 
+
     # Chat/Text Messaging Functionality
-    path("my-messages/<user_id>/", views.MyInbox.as_view()),
-    path("get-messages/<sender_id>/<reciever_id>/", views.GetMessages.as_view()),
-    path("send-messages/", views.SendMessages.as_view()),
+    path("my-messages/<user_id>/", views.MyInbox.as_view()), # SINGLE USER MSGS
+    path("get-messages/<sender_id>/<receiver_id>/", views.GetMessages.as_view()), #CONVERSATION MSGS BETWEEN SENDER & RECEIVER
+    path("send-messages/", views.SendMessages.as_view()),  # SEND MESSGAES
 
 
 
     # Get profile
-    #path("profile/<int:pk>/", views.ProfileDetail.as_view()),
-    #path("search/<username>/", views.SearchUser.as_view()),
+    path("profile/<int:pk>/", views.ProfileDetail.as_view()),
+    path("search/<username>/", views.SearchUser.as_view()),
 
 
 ]

@@ -32,8 +32,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    #'jazzmin',
-
+    'jazzmin',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,9 +44,13 @@ INSTALLED_APPS = [
 
     #Custom
     'api',
+
+
     #Third Party apps
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
+    'corsheaders',
+
 ]
 
 MIDDLEWARE = [
@@ -57,6 +61,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # MY ADDED MIDDLEWARE
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
