@@ -24,6 +24,7 @@ class Profile(models.Model):
     image = models.ImageField(upload_to="user_images", default="default.jpg")
     verified = models.BooleanField(default=False)
 
+    # USE USERNAME IF FULLNAME FIELD IS BLANK
     def save(self, *args, **kwargs):
         if self.full_name == "" or self.full_name == None:
             self.full_name = self.user.username
