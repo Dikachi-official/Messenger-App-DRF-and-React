@@ -11,6 +11,7 @@ import Dashboard from "./views/Dashboard"
 import Navbar from "./views/Navbar"
 import Footer from "./views/Footer"
 import Message from './views/Message'
+import MessageDetail from './views/MessageDetail'
  
 
 
@@ -21,10 +22,11 @@ function App() {
         <Navbar/>
         <Switch>
           <PrivateRoute component={Dashboard} path="/dashboard" exact/>
+          <PrivateRoute component={Message} path="/inbox/" exact/>
+          <PrivateRoute component={MessageDetail} path="/inbox/:id" exact/>
           <Route component={Loginpage} path="/login" />
           <Route component={Registerpage} path="/register" exact />
           <Route component={Homepage} path="/" exact />
-          <Route component={Message} path="/inbox" exact />
         </Switch>
         <Footer/>
       </AuthProvider>

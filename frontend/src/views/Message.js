@@ -9,6 +9,7 @@ import moment from 'moment';
 function Message() {
 
   const baseURL = 'http://127.0.0.1:8000/api'
+
   // Create New State
   const [messages, setMessages] = useState([])
   let [newSearch, setnewSearch] = useState({search: "",});
@@ -19,6 +20,7 @@ function Message() {
   // Get and Decode Token
   const token = localStorage.getItem('authTokens');
   const decoded = jwtDecode(token)
+
   // Get Userdata from decoded token
   const user_id = decoded.user_id
   const username = decoded.username
@@ -36,8 +38,9 @@ function Message() {
     } catch (error) {
       console.log(error);
     }
-  }, [])
+  }, []) //dependency array, to let loop run only once
  
+{/*
   const handleSearchChange = (event) => {
     setnewSearch({
       ...newSearch,
@@ -59,7 +62,10 @@ function Message() {
         .catch((error) => {
             alert("User Does Not Exist")
         });
-};
+  };
+*/}
+
+
   return (
     <div>
       <main className="content" style={{ marginTop: "150px" }}>
@@ -75,31 +81,36 @@ function Message() {
                         type="text"
                         className="form-control my-3"
                         placeholder="Search..."
-                        onChange={handleSearchChange}
+                        
                         name='username'
 
                       />
-                      <button className='ml-2' onClick={SearchUser} style={{border:"none", borderRadius:"50%"}}><i className='fas fa-search'></i></button>
+                      <button className='ml-2' onClick="" style={{border:"none", borderRadius:"50%"}}><i className='fas fa-search'></i></button>
                     </div>
                   </div>
                 </div>
                 {messages.map((message) =>
-                  <Link 
-                    to={"/inbox/" + (message.sender.id === user_id ? message.reciever.id : message.sender.id) + "/"}
-                    href="#"
-                    className="list-group-item list-group-item-action border-0"
-                  >
-                    <small><div className="badge bg-success float-right text-white">{moment.utc(message.date).local().startOf('seconds').fromNow()}</div></small>
+                  <Link to={"/inbox/" + (message.sender.id === user_id ? message.receiver.id : message.sender.id) + "/"}
+                    href="#" className="list-group-item list-group-item-action border-0">
+                    <small>
+                      <div className="badge bg-success float-right text-white">
+                        {moment.utc(message.date).local().startOf('seconds').fromNow()}
+                      </div>
+                    </small>
+                    
                     <div className="d-flex align-items-start">
+                    {/*=== if message sender is not the logged in user === */}
                     {message.sender.id !== user_id && 
-                      <img src={message.sender_profile.image} className="rounded-circle mr-1" alt="1" width={40} height={40}/>
+                      <img src={message.receiver_profile.image} className="rounded-circle mr-1" alt="1" width={40} height={40}/>
                     }
+
+                    {/*=== if message sender is the logged in user === */}
                     {message.sender.id === user_id && 
-                      <img src={message.reciever_profile.image} className="rounded-circle mr-1" alt="2" width={40} height={40}/>
+                      <img src={message.sender_profile.image} className="rounded-circle mr-1" alt="2" width={40} height={40}/>
                     }
                       <div className="flex-grow-1 ml-3">
                           {message.sender.id === user_id && 
-                            (message.reciever_profile.full_name !== null ? message.reciever_profile.full_name : message.reciever.username)
+                            (message.receiver_profile.full_name !== null ? message.receiver_profile.full_name : message.receiver.username)
                           }
 
                           {message.sender.id !== user_id && 
@@ -110,7 +121,7 @@ function Message() {
                         </div>
                       </div>
                     </div>
-                    </Link>
+                  </Link>
                 )}
                 
                 <hr className="d-block d-lg-none mt-1 mb-0" />
