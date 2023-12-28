@@ -101,12 +101,12 @@ function Message() {
                     <div className="d-flex align-items-start">
                     {/*=== if message sender is not the logged in user === */}
                     {message.sender.id !== user_id && 
-                      <img src={message.receiver_profile.image} className="rounded-circle mr-1" alt="1" width={40} height={40}/>
+                      <img src={message.sender_profile.image} className="rounded-circle mr-1" alt="1" width={40} height={40}/>
                     }
 
                     {/*=== if message sender is the logged in user === */}
                     {message.sender.id === user_id && 
-                      <img src={message.sender_profile.image} className="rounded-circle mr-1" alt="2" width={40} height={40}/>
+                      <img src={message.receiver_profile.image} className="rounded-circle mr-1" alt="2" width={40} height={40}/>
                     }
                       <div className="flex-grow-1 ml-3">
                           {message.sender.id === user_id && 

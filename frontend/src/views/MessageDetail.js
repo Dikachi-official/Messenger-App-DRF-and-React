@@ -46,16 +46,21 @@ function MessageDetail() {
   }, []) //dependency array, to let loop run only once
 
 
-  //INDIVIDUAL NEWSTATE (useEffect)
+  //INDIVIDUAL NEWSTATE MSG (useEffect)
   useEffect(() => {
-      try {
-        axios.get(baseURL + '/get-messages/' + user_id + '/' + receiver_id.id + '/' ).then((res) => {
-          console.log(res.data);
-          setMessage(res.data)
-        })
-      } 
-      catch (error) {
-        console.log(error);
+      let interval = setInterval(() => {
+        try {
+          axios.get(baseURL + '/get-messages/' + user_id + '/' + receiver_id.id + '/' ).then((res) => {
+            console.log(res.data);
+            setMessage(res.data)
+          })
+        } 
+        catch (error) {
+          console.log(error);
+        }
+      }, 2000) //get msg loop every 2sec
+      return () => {
+        clearInterval(interval)
       }
   }, [])
 
@@ -78,7 +83,7 @@ function MessageDetail() {
                   </div>
                 </div>
                 {messages.map((message) =>
-                  <Link to={"/inbox/" + (message.sender.id === user_id ? message.receiver.id : message.sender.id) + "/"}
+                  <Link to={"/inbox/" + (message.sender.id === user_id ? message.receiver.id : message.sender.id) + "/"} 
                     href="#" className="list-group-item list-group-item-action border-0">
                     <small>
                       <div className="badge bg-success float-right text-white">
@@ -86,15 +91,16 @@ function MessageDetail() {
                       </div>
                     </small>
                     
+                    {/*=== THE LEFT SIDE OF MSG DETAIL ===*/}
                     <div className="d-flex align-items-start">
                     {/*=== if message sender is not the logged in user === */}
                     {message.sender.id !== user_id && 
-                      <img src={message.receiver_profile.image} className="rounded-circle mr-1" alt="1" width={40} height={40}/>
+                      <img src={message.sender_profile.image} className="rounded-circle mr-1" alt="1" width={40} height={40}/>
                     }
 
                     {/*=== if message sender is the logged in user === */}
                     {message.sender.id === user_id && 
-                      <img src={message.sender_profile.image} className="rounded-circle mr-1" alt="2" width={40} height={40}/>
+                      <img src={message.receiver_profile.image} className="rounded-circle mr-1" alt="2" width={40} height={40}/>
                     }
                       <div className="flex-grow-1 ml-3">
                           {message.sender.id === user_id && 
@@ -114,6 +120,11 @@ function MessageDetail() {
                 
                 <hr className="d-block d-lg-none mt-1 mb-0" />
               </div>
+
+
+
+
+              {/*=== THE RIGHT SIDE OF MSG DETAIL PAGE ===*/}
               <div className="col-12 col-lg-7 col-xl-9">
                 <div className="py-2 px-4 border-bottom d-none d-lg-block">
                   <div className="d-flex align-items-center py-1">
@@ -189,53 +200,51 @@ function MessageDetail() {
                 </div>
                 <div className="position-relative">
                   <div className="chat-messages p-4">
-                    {messages.map((message, index) =>
+                    {message.map((message, index) =>
                       <>
-                      {message.sender === user_id &&
-                        <div className="chat-message-right pb-4">
-                          <div>
-                            <img
-                              src="https://bootdey.com/img/Content/avatar/avatar1.png"
-                              className="rounded-circle mr-1"
-                              alt="Chris Wood"
-                              width={40}
-                              height={40}
-                            />
-                            <div className="text-muted small text-nowrap mt-2">
-                              2:33 am
+                        {message.sender === user_id &&
+                          <div className="chat-message-right pb-4">
+                            <div>
+                              <img
+                                src={message.sender_profile.image}
+                                className="rounded-circle mr-1"
+                                alt="Chris Wood"
+                                width={40}
+                                height={40}
+                              />
+                              <div className="text-muted small text-nowrap mt-2">
+                                {moment.utc(message.date).local().startOf('seconds').fromNow()}
+                              </div>
+                            </div>
+                            <div className="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
+                              <div className="font-weight-bold mb-1">{message.sender_profile.full_name}</div>
+                              {message.message}
                             </div>
                           </div>
-                          <div className="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
-                            <div className="font-weight-bold mb-1">You</div>
-                            Lorem ipsum dolor sit amet, vis erat denique in, dicunt
-                            prodesset te vix.
-                          </div>
-                        </div>
-                      }
+                        }
                       
                     
-
-                      {message.sender !== user_id &&
-                        <div className="chat-message-left pb-4">
-                          <div>
-                            <img
-                              src="https://bootdey.com/img/Content/avatar/avatar3.png"
-                              className="rounded-circle mr-1"
-                              alt="Sharon Lessman"
-                              width={40}
-                              height={40}
-                            />
-                            <div className="text-muted small text-nowrap mt-2">
-                              2:34 am
+                      
+                        {message.sender !== user_id &&
+                          <div className="chat-message-left pb-4">
+                            <div>
+                              <img
+                                src={message.sender_profile.image}
+                                className="rounded-circle mr-1"
+                                alt="Sharon Lessman"
+                                width={40}
+                                height={40}
+                              />
+                              <div className="text-muted small text-nowrap mt-2">
+                              {moment.utc(message.date).local().startOf('seconds').fromNow()}
+                              </div>
+                            </div>
+                            <div className="flex-shrink-1 bg-light rounded py-2 px-3 ml-3">
+                              <div className="font-weight-bold mb-1">{message.sender_profile.full_name}</div>
+                              {message.message}
                             </div>
                           </div>
-                          <div className="flex-shrink-1 bg-light rounded py-2 px-3 ml-3">
-                            <div className="font-weight-bold mb-1">Sharon Lessman</div>
-                            Sit meis deleniti eu, pri vidit meliore docendi ut, an eum
-                            erat animal commodo.
-                          </div>
-                        </div>
-                      }
+                        }
                       </>
                     )}
 
