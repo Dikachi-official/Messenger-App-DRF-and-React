@@ -16,8 +16,12 @@ function MessageDetail() {
   const [messages, setMessages] = useState([])  //ALL MESSAGES NEWSTATE (useEffect)
   const [message, setMessage] = useState([])  //INDIVIDUAL NEWSTATE (useEffect)
 
+  //
+  let [newMessage, setNewMessage] = useState({message : ""})
+
   const receiver_id = useParams()
   console.log(receiver_id)
+
   // Initialize the useAxios Function to post and get data from protected routes
   const axios = useAxios()
 
@@ -63,6 +67,43 @@ function MessageDetail() {
         clearInterval(interval)
       }
   }, [])
+
+
+  // capture changes made by the user in those fields and update the component's state accordingly.
+  // grab user input at frontend and send to "setNewMessage" state 
+  const handleChange = (event) => {
+    setNewMessage({
+      ...newMessage, //means a spread operator, to grab the value of "newMessage" key
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  console.log(newMessage);
+
+
+
+  // Send Message
+  // get form data from user input frontend
+  const SendMessage = () => {
+    const formdata = new FormData()
+    formdata.append("user", user_id)
+    formdata.append("sender", user_id)
+    formdata.append("receiver", receiver_id.id)
+    formdata.append("message", newMessage.message)
+    formdata.append("is_read", false)
+
+
+    //send form data through API path "localhost/api/send-messages/" to the database 
+    try {
+        axios.post(baseURL + '/send-messages/', formdata).then((res) => {
+          document.getElementById("text-input").value = ""; //to claer the user input field after msg send
+          setNewMessage(newMessage = "")
+        })
+    } catch (error) {
+        console.log("error ===", error);
+    }
+
+  }
 
 
 
@@ -256,8 +297,12 @@ function MessageDetail() {
                       type="text"
                       className="form-control"
                       placeholder="Type your message"
+                      name='message'
+                      value={newMessage.message}
+                      onChange={handleChange}
+                      id='text-input'
                     />
-                    <button className="btn btn-primary">Send</button>
+                    <button onClick={SendMessage} className="btn btn-primary">Send</button>
                   </div>
                 </div>
               </div>
