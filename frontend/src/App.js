@@ -12,6 +12,7 @@ import Navbar from "./views/Navbar"
 import Footer from "./views/Footer"
 import Message from './views/Message'
 import MessageDetail from './views/MessageDetail'
+import SearchUsers from "./views/SearchUsers"
  
 
 
@@ -24,6 +25,7 @@ function App() {
           <PrivateRoute component={Dashboard} path="/dashboard" exact/>
           <PrivateRoute component={Message} path="/inbox/" exact/>
           <PrivateRoute component={MessageDetail} path="/inbox/:id" exact/>
+          <PrivateRoute component={SearchUsers} path="/search/:username" exact/>
           <Route component={Loginpage} path="/login" />
           <Route component={Registerpage} path="/register" exact />
           <Route component={Homepage} path="/" exact />

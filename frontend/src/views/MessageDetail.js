@@ -3,9 +3,8 @@ import './style/Message.css'
 import { useState, useEffect } from 'react'
 import useAxios from '../utils/useAxios'
 import jwtDecode from 'jwt-decode'
-import { Link, useHistory } from 'react-router-dom/'
+import { Link, useParams, useHistory } from 'react-router-dom/'
 import moment from 'moment';
-import { useParams } from 'react-router-dom'
 
 
 
@@ -16,11 +15,13 @@ function MessageDetail() {
   const [messages, setMessages] = useState([])  //ALL MESSAGES NEWSTATE (useEffect)
   const [message, setMessage] = useState([])  //INDIVIDUAL NEWSTATE (useEffect)
 
-  //
+  // To define state for send messages
   let [newMessage, setNewMessage] = useState({message : ""})
 
+  // To define state for Search user
+  let [newSearch, setNewSearch] = useState({search : ""})
+
   const receiver_id = useParams()
-  console.log(receiver_id)
 
   // Initialize the useAxios Function to post and get data from protected routes
   const axios = useAxios()
@@ -31,6 +32,9 @@ function MessageDetail() {
 
   // Get Userdata from decoded token
   const user_id = decoded.user_id
+
+  // Initialize useHistory to redirect users
+  const history = useHistory()
 
 
 
@@ -62,11 +66,11 @@ function MessageDetail() {
         catch (error) {
           console.log(error);
         }
-      }, 2000) //get msg loop every 2sec
+      }, 1000) //get msg loop every 1sec
       return () => {
         clearInterval(interval)
       }
-  }, [])
+  }, [history, receiver_id.id])
 
 
   // capture changes made by the user in those fields and update the component's state accordingly.
@@ -92,7 +96,6 @@ function MessageDetail() {
     formdata.append("message", newMessage.message)
     formdata.append("is_read", false)
 
-
     //send form data through API path "localhost/api/send-messages/" to the database 
     try {
         axios.post(baseURL + '/send-messages/', formdata).then((res) => {
@@ -103,6 +106,39 @@ function MessageDetail() {
         console.log("error ===", error);
     }
 
+  }
+
+
+
+  // Search User func
+  const handleSearchChange = (event) => {
+    setNewSearch({
+      ...newSearch,
+      [event.target.name]: event.target.value
+    })
+  }
+  console.log(newSearch.username);
+
+  const SearchUser = () => {
+    try {
+      axios.get(baseURL + '/search/' + newSearch.username + '/')
+      .then((res) => {
+          if (res.status === 404) {
+              console.log(res.data.detail);
+              alert("User does not exist");
+          } else {
+              history.push('/search/'+newSearch.username+'/');
+              console.log("Found")
+          }
+      })
+      .catch((error) => {
+          alert("User Does Not Exist")
+      });
+    } 
+    catch (error) {
+      console.log(error);
+    }
+      
   }
 
 
@@ -118,8 +154,8 @@ function MessageDetail() {
               <div className="px-4 ">
                   <div className="d-flfex align-itemfs-center">
                     <div className="flex-grow-1 d-flex align-items-center mt-2">
-                      <input type="text" className="form-control my-3" placeholder="Search..." name='username'/>
-                      <button className='ml-2' style={{border:"none", borderRadius:"50%"}}><i className='fas fa-search'></i></button>
+                      <input type="text" className="form-control my-3" placeholder="Search User..." onChange={handleSearchChange} name='username'/>
+                      <button onClick={SearchUser} className='ml-2' style={{border:"none", borderRadius:"50%"}}><i className='fas fa-search'></i></button>
                     </div>
                   </div>
                 </div>
