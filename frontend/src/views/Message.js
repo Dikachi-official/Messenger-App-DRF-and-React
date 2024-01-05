@@ -126,6 +126,10 @@ function Message() {
                 
                 <hr className="d-block d-lg-none mt-1 mb-0" />
               </div>
+
+
+
+              {/*=== THE RIGHT SIDE OF THE INBOX LAYOUT ===*/}
               <div className="col-12 col-lg-7 col-xl-9">
                 <div className="py-2 px-4 border-bottom d-none d-lg-block">
                   <div className="d-flex align-items-center py-1">
@@ -144,6 +148,7 @@ function Message() {
                         <em>Online</em>
                       </div>
                     </div>
+                    {/*=== HEADER BUTTONS ===*/}
                     <div>
                       <button className="btn btn-primary btn-lg mr-1 px-3">
                         <svg
@@ -197,6 +202,7 @@ function Message() {
                         </svg>
                       </button>
                     </div>
+                    {/*=== END OF HEADER BUTTONS ===*/}
                   </div>
                 </div>
                 <div className="position-relative">
