@@ -148,6 +148,7 @@ function Message() {
                         <em>Online</em>
                       </div>
                     </div>
+                    
                     {/*=== HEADER BUTTONS ===*/}
                     <div>
                       <button className="btn btn-primary btn-lg mr-1 px-3">
